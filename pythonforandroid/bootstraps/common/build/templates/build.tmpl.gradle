@@ -3,6 +3,9 @@ buildscript {
     repositories {
        google()
        jcenter()
+       maven {
+            url "https://maven.mozilla.org/maven2/"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.1'
@@ -13,6 +16,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url "https://maven.mozilla.org/maven2/"
+        }
         {%- for repo in args.gradle_repositories %}
         {{repo}}
         {%- endfor %}
@@ -82,8 +88,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
         {%- for option in args.compile_options %}
         {{option}}
         {%- endfor %}
@@ -122,6 +128,7 @@ dependencies {
     {%- endif %}
     {% if args.presplash_lottie %}
     implementation 'com.airbnb.android:lottie:6.1.0'
+    implementation "org.mozilla.geckoview:geckoview:115.0.20230726201356"
     {%- endif %}
 }
 
