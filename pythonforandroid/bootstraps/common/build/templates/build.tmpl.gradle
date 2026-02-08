@@ -128,7 +128,7 @@ dependencies {
     {%- endif %}
     {% if args.presplash_lottie %}
     implementation 'com.airbnb.android:lottie:6.1.0'
-    implementation "org.mozilla.geckoview:geckoview:115.0.20230726201356"
     {%- endif %}
+    implementation "org.mozilla.geckoview:geckoview:115.0.20230726201356"
 }
 
