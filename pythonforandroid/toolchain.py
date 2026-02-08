@@ -1017,6 +1017,7 @@ class ToolchainCL:
             env["ANDROID_NDK_HOME"] = self.ctx.ndk_dir
             env["ANDROID_HOME"] = self.ctx.sdk_dir
             env['GRADLE_OPTS'] = "-Xmx16g -XX:MaxMetaspaceSize=16g"
+            jvm_args = "-Xmx16g -XX:MaxMetaspaceSize=16g"
 
             gradlew = sh.Command('./gradlew')
 
@@ -1046,7 +1047,6 @@ class ToolchainCL:
 
             # WARNING: We should make sure to clean the build directory before building.
             # See PR: kivy/python-for-android#2705
-            jvm_args = "-Xmx16g -XX:MaxMetaspaceSize=16g"
             clean_output = shprint(gradlew, "clean", _tail=20, _critical=True, _env=env)
             gradle_command = [
                 gradle_task,

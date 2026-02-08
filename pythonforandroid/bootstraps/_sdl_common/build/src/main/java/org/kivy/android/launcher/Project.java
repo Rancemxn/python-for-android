@@ -1,14 +1,18 @@
 package org.kivy.android.launcher;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
+import java.io.UnsupportedEncodingException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
-/** This represents a project we've scanned for. */
+import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+
+/**
+ * This represents a project we've scanned for.
+ */
 public class Project {
 
     public String dir = null;
@@ -26,8 +30,9 @@ public class Project {
     }
 
     /**
-     * Scans directory for a android.txt file. If it finds one, and it looks valid enough, then it
-     * creates a new Project, and returns that. Otherwise, returns null.
+     * Scans directory for a android.txt file. If it finds one,
+     * and it looks valid enough, then it creates a new Project,
+     * and returns that. Otherwise, returns null.
      */
     public static Project scanDirectory(File dir) {
 
@@ -56,7 +61,7 @@ public class Project {
         }
 
         // Make sure we're dealing with a directory.
-        if (!dir.isDirectory()) {
+        if (! dir.isDirectory()) {
             return null;
         }
 
@@ -89,5 +94,6 @@ public class Project {
         }
 
         return null;
+
     }
 }

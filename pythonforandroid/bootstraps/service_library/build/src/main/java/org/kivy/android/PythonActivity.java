@@ -6,3 +6,4 @@ import android.app.Activity;
 public class PythonActivity extends Activity {
     public static PythonActivity mActivity = null;
 }
+

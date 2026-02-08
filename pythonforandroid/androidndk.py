@@ -67,10 +67,6 @@ class AndroidNDK:
         return f"{self.llvm_binutils_prefix}strip"
 
     @property
-    def llvm_nm(self):
-        return f"{self.llvm_binutils_prefix}nm"
-
-    @property
     def sysroot(self):
         return os.path.join(self.llvm_prebuilt_dir, "sysroot")
 

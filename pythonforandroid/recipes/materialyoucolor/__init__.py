@@ -1,15 +1,11 @@
-from pythonforandroid.recipe import PyProjectRecipe
+from pythonforandroid.recipe import CppCompiledComponentsPythonRecipe
 
 
-class MaterialyoucolorRecipe(PyProjectRecipe):
+class MaterialyoucolorRecipe(CppCompiledComponentsPythonRecipe):
     stl_lib_name = "c++_shared"
-    version = "2.0.10"
+    version = "2.0.9"
     url = "https://github.com/T-Dynamos/materialyoucolor-python/releases/download/v{version}/materialyoucolor-{version}.tar.gz"
-
-    def get_recipe_env(self, arch, **kwargs):
-        env = super().get_recipe_env(arch, **kwargs)
-        env['LDCXXSHARED'] = env['CXX'] + ' -shared'
-        return env
+    depends = ["setuptools"]
 
 
 recipe = MaterialyoucolorRecipe()

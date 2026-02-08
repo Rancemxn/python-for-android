@@ -1,5 +1,4 @@
 from os.path import join
-from multiprocessing import cpu_count
 
 from pythonforandroid.recipe import Recipe
 from pythonforandroid.util import current_directory
@@ -45,23 +44,35 @@ class OpenSSLRecipe(Recipe):
 
     '''
 
-    version = '3.3.1'
-    url = 'https://www.openssl.org/source/openssl-{version}.tar.gz'
+    version = '1.1'
+    '''the major minor version used to link our recipes'''
+
+    url_version = '1.1.1w'
+    '''the version used to download our libraries'''
+
+    url = 'https://www.openssl.org/source/openssl-{url_version}.tar.gz'
 
     built_libraries = {
-        'libcrypto.so': '.',
-        'libssl.so': '.',
+        'libcrypto{version}.so'.format(version=version): '.',
+        'libssl{version}.so'.format(version=version): '.',
     }
+
+    @property
+    def versioned_url(self):
+        if self.url is None:
+            return None
+        return self.url.format(url_version=self.url_version)
 
     def get_build_dir(self, arch):
         return join(
-            self.get_build_container_dir(arch), self.name + self.version[0]
+            self.get_build_container_dir(arch), self.name + self.version
         )
 
     def include_flags(self, arch):
         '''Returns a string with the include folders'''
         openssl_includes = join(self.get_build_dir(arch.arch), 'include')
         return (' -I' + openssl_includes +
+                ' -I' + join(openssl_includes, 'internal') +
                 ' -I' + join(openssl_includes, 'openssl'))
 
     def link_dirs_flags(self, arch):
@@ -74,7 +85,7 @@ class OpenSSLRecipe(Recipe):
         '''Returns a string with the appropriate `-l<lib>` flags to link with
         the openssl libs. This string is usually added to the environment
         variable `LIBS`'''
-        return ' -lcrypto -lssl'
+        return ' -lcrypto{version} -lssl{version}'.format(version=self.version)
 
     def link_flags(self, arch):
         '''Returns a string with the flags to link with the openssl libraries
@@ -83,12 +94,10 @@ class OpenSSLRecipe(Recipe):
 
     def get_recipe_env(self, arch=None):
         env = super().get_recipe_env(arch)
-        env['OPENSSL_VERSION'] = self.version[0]
+        env['OPENSSL_VERSION'] = self.version
+        env['MAKE'] = 'make'  # This removes the '-j5', which isn't safe
         env['CC'] = 'clang'
-        env['ANDROID_NDK_ROOT'] = self.ctx.ndk_dir
-        env["PATH"] = f"{self.ctx.ndk.llvm_bin_dir}:{env['PATH']}"
-        env["CFLAGS"] += " -Wno-macro-redefined"
-        env["MAKE"] = "make"
+        env['ANDROID_NDK_HOME'] = self.ctx.ndk_dir
         return env
 
     def select_build_arch(self, arch):
@@ -116,12 +125,13 @@ class OpenSSLRecipe(Recipe):
                 'shared',
                 'no-dso',
                 'no-asm',
-                'no-tests',
                 buildarch,
                 '-D__ANDROID_API__={}'.format(self.ctx.ndk_api),
             ]
             shprint(perl, 'Configure', *config_args, _env=env)
-            shprint(sh.make, '-j', str(cpu_count()), _env=env)
+            self.apply_patch('disable-sover.patch', arch.arch)
+
+            shprint(sh.make, 'build_libs', _env=env)
 
 
 recipe = OpenSSLRecipe()

@@ -28,7 +28,6 @@
 
          -->
     <property file="ant.properties" />
-    
 
     <!-- if sdk.dir was not set from one of the property file, then
          get it from the ANDROID_HOME env var.
