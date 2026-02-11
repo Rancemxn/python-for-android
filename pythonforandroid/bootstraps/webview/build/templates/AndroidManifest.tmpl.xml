@@ -23,6 +23,7 @@
         <uses-permission android:name="{{ perm.name }}"{% if perm.maxSdkVersion %} android:maxSdkVersion="{{ perm.maxSdkVersion }}"{% endif %}{% if perm.usesPermissionFlags %} android:usesPermissionFlags="{{ perm.usesPermissionFlags }}"{% endif %} />
     {% endfor %}
 
+
     {% if args.wakelock %}
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     {% endif %}
@@ -47,6 +48,7 @@
                  android:theme="{{args.android_apptheme}}{% if not args.window %}.Fullscreen{% endif %}"
                  android:hardwareAccelerated="true"
                  android:usesCleartextTraffic="true"
+                 android:requestLegacyExternalStorage="true"
                  android:extractNativeLibs="true"
                  {% if debug %}android:debuggable="true"{% endif %}
                  >
